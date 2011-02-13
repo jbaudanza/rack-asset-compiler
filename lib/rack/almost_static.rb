@@ -11,6 +11,15 @@ module Rack
       @compiler = options[:compiler] || block
       @source_dir = options[:source_dir] || Dir.pwd
       @source_extension = options[:source_extension]
+      @content_type = options[:content_type]
+
+      @cache_ttl = options.has_key?(:cache) ? options[:cache] : (ENV['RACK_ENV'] == 'production')
+
+      # Default cache duration is 1 week
+      if(@cache_ttl && !@cache_ttl.kind_of?(Integer))
+        @cache_ttl = 60 * 60 * 24 * 7
+      end
+
       @urls = options[:urls]
     end
 
@@ -45,7 +54,18 @@ module Rack
           source_file = F.join(source_dir, request_base)
           if F.exists?(source_file)
             body = compile(source_file)
-            return response(200, body, 'text/chicken-script')
+
+            headers = {
+              'Content-Type' => @content_type,
+              'Content-Length' => body.length.to_s,
+            }
+
+            if @cache_ttl
+              headers['Expires'] = (Time.now + @cache_ttl).strftime('%a, %d %b %Y %H:%M:%S GMT')
+              headers['Cache-Control'] = "public,max-age=#{@cache_ttl}"
+            end
+
+            return [200, headers, body]
           end
         end
       end

@@ -58,4 +58,33 @@ describe "AlmostStatic" do
     get '/lobster'
     last_response.body.should include('Lobstericious')
   end
+
+  describe "Caching" do
+    it "should not cache by default" do
+      @options.delete(:cache)
+      get '/chickenscripts/application.chickenscript'
+      last_response.headers.should_not include('Cache-Control')
+    end
+
+    it "should cache by default on production" do
+      @options.delete(:cache)
+      ENV['RACK_ENV'] = 'production'
+      get '/chickenscripts/application.chickenscript'
+      last_response.headers.should include('Cache-Control')
+    end
+
+    it "should set not the cache header when the cache options is false" do
+      @options[:cache] = false
+      get '/chickenscripts/application.chickenscript'
+      last_response.headers.should_not include('Cache-Control')
+      last_response.headers.should_not include('Expires')
+    end
+
+    it "should set the cache header to a duration of one week when the cache options is true" do
+      @options[:cache] = true
+      get '/chickenscripts/application.chickenscript'
+      last_response.headers['Cache-Control'].should == "public,max-age=604800"
+      last_response.headers.should include('Expires')
+    end
+  end
 end
