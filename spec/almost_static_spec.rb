@@ -26,6 +26,7 @@ describe "AlmostStatic" do
   def app
     options = @options
     Rack::Builder.new {
+      use Rack::Lint
       use Rack::AlmostStatic, options
       run Rack::Lobster.new
     }
@@ -75,6 +76,11 @@ describe "AlmostStatic" do
     get '/chickenscripts/application.chickenscript', {}, {'HTTP_IF_MODIFIED_SINCE' => last_modified_time}
     last_response.status.should == 200
     last_response.body.should == "chickenscript"
+  end
+
+  it "should reject requests with a .." do
+    get '/chickenscript/../somethingbad'
+    last_response.status.should == 403
   end
 
   describe "Caching" do

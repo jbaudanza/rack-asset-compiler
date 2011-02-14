@@ -16,6 +16,7 @@ describe "CoffeeCompiler" do
   def app
     options = @options
     Rack::Builder.new {
+      use Rack::Lint
       use Rack::CoffeeCompiler, options
       run Rack::Lobster.new
     }
