@@ -1,8 +1,8 @@
-require 'rack/almost_static'
+require 'rack/asset_compiler'
 require 'coffee-script'
 
 module Rack
-  class CoffeeCompiler < AlmostStatic
+  class CoffeeCompiler < AssetCompiler
     def initialize(app, options={})
       options[:urls] ||= '/javascripts'
       options[:content_type] ||= 'text/javascript'

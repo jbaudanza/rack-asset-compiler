@@ -42,8 +42,10 @@ describe "CoffeeCompiler" do
 
     it "should not render a window.alert by default on production" do
       @options.delete(:alert_on_error)
+      old_rack_env = ENV['RACK_ENV']
       ENV['RACK_ENV'] = 'production'
       lambda { do_get }.should raise_error(CoffeeScript::CompilationError)
+      ENV['RACK_ENV'] = old_rack_env
     end
 
     it "should not render a window.alert if alert_on_error is false" do

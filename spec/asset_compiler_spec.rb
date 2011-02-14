@@ -1,11 +1,10 @@
-require 'rack/almost_static'
+require 'rack/asset_compiler'
 require 'rack/lobster'
 require "rack/test"
 
 include Rack::Test::Methods
 
-# XXX: Better names: Compiler, Transform
-describe "AlmostStatic" do
+describe "AssetCompiler" do
   before do
     @compiler = lambda do |source_file|
       @source_file = source_file
@@ -27,7 +26,7 @@ describe "AlmostStatic" do
     options = @options
     Rack::Builder.new {
       use Rack::Lint
-      use Rack::AlmostStatic, options
+      use Rack::AssetCompiler, options
       run Rack::Lobster.new
     }
   end
@@ -92,8 +91,11 @@ describe "AlmostStatic" do
 
     it "should cache by default on production" do
       @options.delete(:cache)
+      old_rack_env = ENV['RACK_ENV']
       ENV['RACK_ENV'] = 'production'
       get '/chickenscripts/application.chickenscript'
+      ENV['RACK_ENV'] = old_rack_env
+
       last_response.headers.should include('Cache-Control')
     end
 

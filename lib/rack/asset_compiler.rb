@@ -1,5 +1,5 @@
 module Rack
-  class AlmostStatic
+  class AssetCompiler
     attr_accessor :urls, :source_dir, :source_extension
 
     F = ::File
