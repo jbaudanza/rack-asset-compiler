@@ -12,11 +12,10 @@ describe "AlmostStatic" do
       'chickenscript'
     end
 
-    @source_dir = File.join(File.dirname(__FILE__), 'eggscript')
+    @source_dir = File.join(File.dirname(__FILE__), 'fixtures/eggscripts')
 
     @options = {
       :urls => '/chickenscripts/',
-      :root => 'eggscripts',
       :source_dir => @source_dir,
       :source_extension => 'eggscript',
       :content_type => 'text/chicken-script',

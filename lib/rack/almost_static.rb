@@ -43,8 +43,8 @@ module Rack
       return response( 403, 'Forbidden') if request_path.include? ".."
 
       urls.each do |url|
-        match_parts = url.split('/')
-        request_parts = request_path.split('/')
+        match_parts = url.split('/').select{ |str| str.length > 0 }
+        request_parts = request_path.split('/').select{ |str| str.length > 0 }
 
         if(request_parts.take(match_parts.length) == match_parts)
           request_base = request_parts[match_parts.length..-1]
