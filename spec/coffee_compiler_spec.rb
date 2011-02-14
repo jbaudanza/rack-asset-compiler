@@ -24,7 +24,7 @@ describe "CoffeeCompiler" do
 
   it "should compile the coffeescript" do
     get '/javascripts/application.js'
-    last_response.body.should == CoffeeScript.compile(File.read("#{@source_dir}/application.coffeescript"))
+    last_response.body.should == CoffeeScript.compile(File.read("#{@source_dir}/application.coffee"))
     last_response.status.should == 200
     last_response.content_type.should == 'text/javascript'
   end

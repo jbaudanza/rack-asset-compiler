@@ -14,7 +14,7 @@ describe "AssetCompiler" do
     @source_dir = File.join(File.dirname(__FILE__), 'fixtures/eggscripts')
 
     @options = {
-      :urls => '/chickenscripts/',
+      :url => '/chickenscripts/',
       :source_dir => @source_dir,
       :source_extension => 'eggscript',
       :content_type => 'text/chicken-script',

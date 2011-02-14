@@ -4,9 +4,9 @@ require 'coffee-script'
 module Rack
   class CoffeeCompiler < AssetCompiler
     def initialize(app, options={})
-      options[:urls] ||= '/javascripts'
+      options[:url] ||= '/javascripts'
       options[:content_type] ||= 'text/javascript'
-      options[:source_extension] ||= 'coffeescript'
+      options[:source_extension] ||= 'coffee'
       @alert_on_error = options.has_key?(:alert_on_error) ? options[:alert_on_error] : ENV['RACK_ENV'] != 'production'
       super
     end
