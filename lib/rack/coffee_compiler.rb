@@ -3,16 +3,32 @@ require 'coffee-script'
 
 module Rack
   class CoffeeCompiler < AssetCompiler
+    LOCK = Mutex.new
+
     def initialize(app, options={})
-      options[:url] ||= '/javascripts'
-      options[:content_type] ||= 'text/javascript'
-      options[:source_extension] ||= 'coffee'
-      @alert_on_error = options.has_key?(:alert_on_error) ? options[:alert_on_error] : ENV['RACK_ENV'] != 'production'
+      options = {
+        :url => '/javascripts',
+        :content_type => 'text/javascript',
+        :source_extension => 'coffee',
+        :alert_on_error => ENV['RACK_ENV'] != 'production',
+        :lock => LOCK
+      }.merge(options)
+
+      @alert_on_error = options[:alert_on_error]
+      @lock = options[:lock]
       super
     end
 
     def compile(source_file)
-     begin
+      if @lock
+        @lock.synchronize{ unsynchronized_compile(source_file) }
+      else
+        unsynchronized_compile(source_file)
+      end
+    end
+
+    def unsynchronized_compile(source_file)
+      begin
         CoffeeScript.compile(::File.read(source_file))
       rescue CoffeeScript::CompilationError => e
         if @alert_on_error
