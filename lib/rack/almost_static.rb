@@ -23,8 +23,9 @@ module Rack
       @urls = options[:urls]
     end
 
-    def response(status, body, content_type='text/plain')
-      [status, {"Content-Type" => content_type,
+    def response(status, body)
+      body += "\r\n"
+      [status, {"Content-Type" => 'text/plain',
            "Content-Length" => body.size.to_s},
            [body]]
     end
@@ -39,7 +40,7 @@ module Rack
 
     def call(env)
       request_path = Utils.unescape(env["PATH_INFO"])
-      return response( 403, "Forbidden: #{request_path}\n" ) if request_path.include? ".."
+      return response( 403, 'Forbidden') if request_path.include? ".."
 
       urls.each do |url|
         match_parts = url.split('/')
@@ -53,11 +54,21 @@ module Rack
 
           source_file = F.join(source_dir, request_base)
           if F.exists?(source_file)
+            last_modified_time = F.mtime(source_file)
+
+            if env['HTTP_IF_MODIFIED_SINCE']
+              cached_time = Time.parse(env['HTTP_IF_MODIFIED_SINCE'])
+              if last_modified_time <= cached_time
+                return response(304, 'Not modified')
+              end
+            end
+
             body = compile(source_file)
 
             headers = {
               'Content-Type' => @content_type,
               'Content-Length' => body.length.to_s,
+              'Last-Modified' => last_modified_time.httpdate
             }
 
             if @cache_ttl

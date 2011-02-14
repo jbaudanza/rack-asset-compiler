@@ -59,6 +59,25 @@ describe "AlmostStatic" do
     last_response.body.should include('Lobstericious')
   end
 
+  it "should include a last-modified header" do
+    get '/chickenscripts/application.chickenscript'
+    last_response.headers["Last-Modified"].should == File.mtime("#{@source_dir}/application.eggscript").httpdate
+  end
+
+  it "should respond with a 304 on a last-modified hit" do
+    last_modified_time = File.mtime("#{@source_dir}/application.eggscript").httpdate
+    get '/chickenscripts/application.chickenscript', {}, {'HTTP_IF_MODIFIED_SINCE' => last_modified_time}
+    last_response.status.should == 304
+    last_response.body.should == "Not modified\r\n"
+  end
+
+  it "should return the compiled code on a last-modified miss" do
+    last_modified_time = (File.mtime("#{@source_dir}/application.eggscript") - 10).httpdate
+    get '/chickenscripts/application.chickenscript', {}, {'HTTP_IF_MODIFIED_SINCE' => last_modified_time}
+    last_response.status.should == 200
+    last_response.body.should == "chickenscript"
+  end
+
   describe "Caching" do
     it "should not cache by default" do
       @options.delete(:cache)
