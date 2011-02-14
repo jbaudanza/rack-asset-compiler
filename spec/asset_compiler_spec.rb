@@ -31,6 +31,13 @@ describe "AssetCompiler" do
     }
   end
 
+  it "should raise an error if required options are missing" do
+    lambda {
+      @options.delete(:content_type)
+      get '/oops'
+    }.should raise_error
+  end
+
   it "should match files directly beneath the URL" do
     get '/chickenscripts/application.chickenscript'
     @source_file.should == "#{@source_dir}/application.eggscript"

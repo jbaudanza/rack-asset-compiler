@@ -7,14 +7,24 @@ module Rack
     def initialize(app, options={}, &block)
       @app = app
 
-      # XXX: Make these required?
-      @compiler = options[:compiler] || block
-      @source_dir = options[:source_dir] || Dir.pwd
-      @url = options[:url] || '/'
+      options = {
+        :compiler => block,
+        :source_dir => Dir.pwd,
+        :url => '/',
+        :cache => ENV['RACK_ENV'] == 'production'
+      }.merge(options)
+
+      %w(source_extension content_type).each do |field|
+        raise "Missing required option :#{field}" unless options.has_key?(field.to_sym)
+      end
+
+      @compiler = options[:compiler]
+      @source_dir = options[:source_dir]
+      @url = options[:url]
       @source_extension = options[:source_extension]
       @content_type = options[:content_type]
 
-      @cache_ttl = options.has_key?(:cache) ? options[:cache] : (ENV['RACK_ENV'] == 'production')
+      @cache_ttl = options[:cache]
 
       # Default cache duration is 1 week
       if(@cache_ttl && !@cache_ttl.kind_of?(Integer))
@@ -33,7 +43,7 @@ module Rack
       if @compiler
         @compiler.call(source_file)
       else
-        ''
+        raise "Missing compiler"
       end
     end
 
