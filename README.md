@@ -17,6 +17,8 @@ The compilation step is given in the form of a lambda passed as the `:compiler` 
 be invoked whenever a client requests a file that needs to be compiled.  The source filename will be passed
 in and the compiled output is expected to be returned.
 
+    require 'rack/asset_compiler'
+
     use Rack::AssetCompiler(
       :source_dir => 'lowercase',
       :url => '/uppercase',
@@ -36,6 +38,8 @@ This gem comes with two subclasses: one for compiling CoffeeScript and one for S
 ## Compiling CoffeeScript
 
 config.ru
+    require 'rack/coffee_compiler'
+
     use Rack::CoffeeCompiler,
       :source_dir => 'app/coffeescripts'),
       :url => '/javascripts',
@@ -53,6 +57,8 @@ See [examples/jasmine_config.rb](https://github.com/jbaudanza/rack-asset-compile
 ## Compiling Sass
 
 On Rails
+
+    require 'rack/sass_compiler'
 
     # Disable the standard Sass plugin which will write to the filesystem
     Rails.application.config.middleware.delete(Sass::Plugin::Rack)
