@@ -19,7 +19,7 @@ in and the compiled output is expected to be returned.
 
     require 'rack/asset_compiler'
 
-    use Rack::AssetCompiler(
+    use Rack::AssetCompiler,
       :source_dir => 'lowercase',
       :url => '/uppercase',
       :content_type => 'text/plain',
@@ -27,7 +27,6 @@ in and the compiled output is expected to be returned.
       :compiler => lambda { |source_file|
         File.read(source_file).upcase
       }
-    )
 
 ## Subclassing
 An alternative to passing in a lambda to the :compiler option is to subclass Rack::AssetCompiler and
@@ -69,6 +68,20 @@ On Rails
       :url => '/css',
       :syntax => :scss # :sass or :scss, defaults to :scss
 
+## Running without an HTTP cache
+If your stack doesn't include an HTTP cache (like Varnish), the compilation step will run each time a new visitor requests a compiled resource.
+
+An easy solution is to use [Rack::Cache][rack-cache]
+
+    require 'rack/asset_compiler'
+    require 'rack/cache'
+    use Rack::Cache # Make sure this comes first
+    use Rack::AssetCompiler, ...
+
+If you're running on Heroku, you get Varnish for free.  So you don't have to worry about this.
+
+If you're running locally, the user agent cache in your browser is sufficient.  So you also don't need to worry about this.
+
 ## Contribute
 
 Contributions must be accompanied by passing tests. To run the test suite for
@@ -88,3 +101,4 @@ ruby 1.9.2 compatibility added by [Derek Prior][derekprior]
 [rack-coffee]: https://github.com/mattly/rack-coffee
 [mattly]: https://github.com/mattly
 [derekprior]: https://github.com/derekprior
+[rack-cache]: http://rtomayko.github.com/rack-cache/
