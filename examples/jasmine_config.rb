@@ -35,8 +35,10 @@ module Jasmine
         run Jasmine.app(config)
       end
 
-      handler = Rack::Handler.default
-      handler.run app, :Port => port, :AccessLog => []
+      server = Rack::Server.new(:Port => port, :AccessLog => [])
+      # workaround for Rack bug, when Rack > 1.2.1 is released Rack::Server.start(:app => Jasmine.app(self)) will work
+      server.instance_variable_set(:@app, app)
+      server.start
     end
   end
 end
