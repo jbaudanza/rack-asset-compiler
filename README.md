@@ -24,7 +24,7 @@ in and the compiled output is expected to be returned.
       :url => '/uppercase',
       :content_type => 'text/plain',
       :source_extension => 'lower',
-      :compiler => lamba { |source_file|
+      :compiler => lambda { |source_file|
         File.read(source_file).upcase
       }
     )
@@ -66,8 +66,19 @@ On Rails
     # Insert the new middleware
     Rails.application.config.middleware.use Rack::SassCompiler,
       :source_dir => 'app/sass',
-      :url => '/javascripts',
+      :url => '/css',
       :syntax => :scss # :sass or :scss, defaults to :scss
+
+## Contribute
+
+Contributions must be accompanied by passing tests. To run the test suite for
+ the gem you need the following gems installed:
+
+    [sudo] gem install rack rack-test haml coffee-script rspec
+
+After installing the required gems and before beginning development,
+ensure your environment is properly configured and all tests pass by
+running `rake`.
 
 ## Thanks
 asset-compiler was inspired by [rack-coffee] by [Matthew Lyon][mattly]
