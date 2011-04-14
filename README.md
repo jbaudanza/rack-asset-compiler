@@ -82,6 +82,7 @@ running `rake`.
 
 ## Thanks
 asset-compiler was inspired by [rack-coffee] by [Matthew Lyon][mattly]
+ruby 1.9.2 compatibility added by [Derek Prior][derekprior]
 
 [rack-coffee]: https://github.com/mattly/rack-coffee
 [mattly]: https://github.com/mattly/rack-coffee
