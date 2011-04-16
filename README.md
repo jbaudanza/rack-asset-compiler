@@ -87,11 +87,11 @@ The above would use the the sass syntax compiler and output compressed
 CSS. See [Sass Documentation](http://sass-lang.com/docs/yardoc/file.SASS_REFERENCE.html#options)
 for a list of options.
 
-## Compiling Compass
+## Compiling Sass with Compass Support
 
-The compass compiler subclasses the Sass compiler and supports all the
-same options. However, it will also make compass frameworks available to
-the Sass compiler.
+The Compass compiler subclasses the Sass compiler and supports all the
+same options and makes the compass framework mixins available to the
+compiler.
 
     require 'rack/CompassCompiler'
 
@@ -122,7 +122,7 @@ If you're running locally, the user agent cache in your browser is sufficient.  
 Contributions must be accompanied by passing tests. To run the test suite for
  the gem you need the following gems installed:
 
-    [sudo] gem install rack rack-test haml coffee-script rspec
+    [sudo] gem install rack rack-test haml coffee-script rspec compass
 
 After installing the required gems and before beginning development,
 ensure your environment is properly configured and all tests pass by
