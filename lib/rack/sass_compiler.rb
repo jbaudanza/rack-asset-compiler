@@ -13,7 +13,8 @@ module Rack
         :url => '/stylesheets',
         :content_type => 'text/css',
         :sass_options => {
-          :syntax => :scss
+          :syntax => :scss,
+          :cache  => false
         }
       }.rmerge(options)
 
