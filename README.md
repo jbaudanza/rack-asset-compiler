@@ -32,7 +32,7 @@ in and the compiled output is expected to be returned.
 An alternative to passing in a lambda to the :compiler option is to subclass Rack::AssetCompiler and
 override the `compile` method.
 
-This gem comes with two subclasses: one for compiling CoffeeScript and one for Sass.
+This gem comes with three subclasses: one for compiling CoffeeScript one for Sass, and one for Compass.
 
 ## Compiling CoffeeScript
 
@@ -67,8 +67,41 @@ On Rails
     # Insert the new middleware
     Rails.application.config.middleware.use Rack::SassCompiler,
       :source_dir => 'app/sass',
-      :url => '/css',
-      :syntax => :scss # :sass or :scss, defaults to :scss
+      :url => '/css'
+
+The above uses the default options for the sass compiler, including the
+use of the scss syntax. To compile sass, or to change any of the other
+sass compiler options, provide the optional `sass_options` hash in the
+options hash. For example...
+
+    # Insert the new middleware
+    Rails.application.config.middleware.use Rack::SassCompiler,
+      :source_dir => 'app/sass',
+      :url => '/css'
+      :sass_options => {
+        :syntax => :sass,
+        :style => :compressed
+      }
+
+The above would use the the sass syntax compiler and output compressed
+CSS. See [Sass Documentation](http://sass-lang.com/docs/yardoc/file.SASS_REFERENCE.html#options)
+for a list of options.
+
+## Compiling Compass
+
+The compass compiler subclasses the Sass compiler and supports all the
+same options. However, it will also make compass frameworks available to
+the Sass compiler.
+
+    require 'rack/CompassCompiler'
+
+    # require any third party compass frameworks here...
+    # for example, let's use the 960gs plugin
+    require 'ninesixty'
+
+    use Rack::CompassCompiler,
+      :source_dir => 'sass'
+      :url => '/css'
 
 ## Running without an HTTP cache
 If your stack doesn't include an HTTP cache (like Varnish), the compilation step will run each time a new visitor requests a compiled resource.

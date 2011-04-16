@@ -31,7 +31,7 @@ describe "SassCompiler" do
   end
 
   it "should compile sass" do
-    @options[:syntax] = :sass
+    @options[:sass_options] = {:syntax => :sass}
     get '/stylesheets/style.css'
     last_response.body.should ==
       Sass::Engine.new(File.read("#{@source_dir}/style.sass"), :syntax => :sass).render

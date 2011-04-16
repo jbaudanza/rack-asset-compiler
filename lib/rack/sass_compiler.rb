@@ -1,9 +1,10 @@
 require 'rack/asset_compiler'
+require 'helpers/hash_recursive_merge'
 require 'sass'
 
 module Rack
   class SassCompiler < AssetCompiler
-    attr_accessor :syntax
+    attr_accessor :sass_options
 
     def initialize(app, options={})
       options
@@ -11,11 +12,13 @@ module Rack
       options = {
         :url => '/stylesheets',
         :content_type => 'text/css',
-        :syntax => :scss
-      }.merge(options)
+        :sass_options => {
+          :syntax => :scss
+        }
+      }.rmerge(options)
 
-      @syntax = options[:syntax]
-      options[:source_extension] ||= syntax.to_s
+      @sass_options = options[:sass_options]
+      options[:source_extension] ||= @sass_options[:syntax].to_s
       super
     end
 
@@ -24,12 +27,9 @@ module Rack
     end
 
     def compile(source_file)
-      sass_options = {
-        :syntax => syntax,
-        :cache => false,
-        :load_paths => get_load_paths(source_dir)
-      }
-      Sass::Engine.new(::File.read(source_file), sass_options).render
+      @sass_options[:load_paths] ||= []
+      @sass_options[:load_paths]   = @sass_options[:load_paths] | get_load_paths(source_dir)
+      Sass::Engine.new(::File.read(source_file), @sass_options).render
     end
   end
 end
