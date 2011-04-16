@@ -37,6 +37,7 @@ This gem comes with two subclasses: one for compiling CoffeeScript and one for S
 ## Compiling CoffeeScript
 
 config.ru
+
     require 'rack/coffee_compiler'
 
     use Rack::CoffeeCompiler,
@@ -45,6 +46,7 @@ config.ru
       :alert_on_error => true  # Generates a window.alert on compile error.  Defaults to (RACK_ENV != 'production')
 
 Gemfile
+
     gem 'therubyracer'
     gem 'coffee-script'
 
