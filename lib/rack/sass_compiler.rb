@@ -1,5 +1,4 @@
 require 'rack/asset_compiler'
-require 'helpers/hash_recursive_merge'
 require 'sass'
 
 module Rack
@@ -12,11 +11,13 @@ module Rack
       options = {
         :url => '/stylesheets',
         :content_type => 'text/css',
-        :sass_options => {
-          :syntax => :scss,
-          :cache  => false
-        }
-      }.rmerge(options)
+      }.merge(options)
+
+      options[:sass_options] ||= {}
+      options[:sass_options] = {
+        :syntax => :scss,
+        :cache  => false
+      }.merge(options[:sass_options])
 
       @sass_options = options[:sass_options]
       options[:source_extension] ||= @sass_options[:syntax].to_s

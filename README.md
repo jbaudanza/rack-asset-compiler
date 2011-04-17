@@ -87,21 +87,16 @@ The above would use the the sass syntax compiler and output compressed
 CSS. See [Sass Documentation](http://sass-lang.com/docs/yardoc/file.SASS_REFERENCE.html#options)
 for a list of options.
 
-## Compiling Sass with Compass Support
+To make the Compass frameworks available to the SassCompiler, simply
+require Compass and any compass plugins. For example...
 
-The Compass compiler subclasses the Sass compiler and supports all the
-same options and makes the compass framework mixins available to the
-compiler.
+    require 'compass'
+    require 'ninesixty' # 960.gs Compass plugin 
 
-    require 'rack/CompassCompiler'
-
-    # require any third party compass frameworks here...
-    # for example, let's use the 960gs plugin
-    require 'ninesixty'
-
-    use Rack::CompassCompiler,
+    use Rack::SassCompiler,
       :source_dir => 'sass'
       :url => '/css'
+
 
 ## Running without an HTTP cache
 If your stack doesn't include an HTTP cache (like Varnish), the compilation step will run each time a new visitor requests a compiled resource.
