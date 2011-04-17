@@ -1,6 +1,6 @@
 require 'rack/sass_compiler'
 require 'rack/lobster'
-require "rack/test"
+require 'rack/test'
 
 include Rack::Test::Methods
 
@@ -38,4 +38,12 @@ describe "SassCompiler" do
     last_response.status.should == 200
     last_response.content_type.should == 'text/css'
   end
+
+  it "should compile compass when library is loaded" do
+    require 'compass'
+    get '/stylesheets/compass.css'
+    last_response.status.should == 200
+    last_response.content_type.should == 'text/css'
+  end
+
 end

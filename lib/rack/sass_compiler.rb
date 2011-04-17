@@ -24,7 +24,13 @@ module Rack
     end
 
     def get_load_paths(src_dir)
-      [src_dir]
+      paths = [src_dir]
+      if defined?(Compass::Frameworks)
+        Compass::Frameworks::ALL.each do |framework|
+          paths << framework.stylesheets_directory if ::File.exists?(framework.stylesheets_directory)
+        end
+      end
+      paths
     end
 
     def compile(source_file)
