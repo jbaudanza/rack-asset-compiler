@@ -57,9 +57,11 @@ module Rack
       if(request_parts.take(match_parts.length) == match_parts)
         request_base = request_parts[match_parts.length..-1]
 
+        # Directory listsings not supported
+        return response( 403, 'Forbidden') if F.directory? F.join(source_dir, request_base)
+
         # Swap in the source file extension
         request_base[-1].sub!(/\.\w+$/, '.' + source_extension)
-
         source_file = F.join(source_dir, request_base)
 
         if F.exists?(source_file)

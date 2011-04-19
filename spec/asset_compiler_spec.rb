@@ -50,6 +50,11 @@ describe "AssetCompiler" do
     last_response.body.should == 'chickenscript'
   end
 
+  it "should return a 403 error when a directory is requested" do
+    get '/chickenscripts/'
+    last_response.status.should == 403
+  end
+
   it "should not call the compiler for missing files" do
     get '/chickenscripts/missing.chickenscript'
     @source_file.should be_nil
