@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'rack-asset-compiler'
-  s.version = "0.2.0"
+  s.version = "0.2.1"
   s.author = 'Jonathan Baudanza'
   s.email = 'jon@jonb.org'
   s.summary = 'Rack Middleware to facilitate the generic compiling static assets.'
