@@ -32,7 +32,7 @@ in and the compiled output is expected to be returned.
 An alternative to passing in a lambda to the :compiler option is to subclass Rack::AssetCompiler and
 override the `compile` method.
 
-This gem comes with three subclasses: one for compiling CoffeeScript one for Sass, and one for Compass.
+This gem comes with two subclasses: one for compiling CoffeeScript and one for compiling Sass.
 
 ## Compiling CoffeeScript
 
