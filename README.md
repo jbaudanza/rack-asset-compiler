@@ -11,7 +11,7 @@ rack-asset-compiler does not use any local file storage and makes use of caching
 ## Generic form
 
 In this example, we have a set of text files with the extension .lower in the 'lowercase' directory, and
-we want to server .uppercase files out of http://yourhost.com/uppercase
+we want to serve .uppercase files out of http://yourhost.com/uppercase
 
 The compilation step is given in the form of a lambda passed as the `:compiler` option.  This lambda will
 be invoked whenever a client requests a file that needs to be compiled.  The source filename will be passed
@@ -49,9 +49,6 @@ Gemfile
 
     gem 'therubyracer'
     gem 'coffee-script'
-
-    # On heroku, use this gem instead of therubyracer
-    gem 'therubyracer-heroku', '0.8.1.pre3'
 
 See [examples/jasmine_config.rb](https://github.com/jbaudanza/rack-asset-compiler/tree/master/examples/jasmine_config.rb) for an example of how to use CoffeeScript with your jasmine specs.
 
@@ -108,7 +105,8 @@ An easy solution is to use [Rack::Cache][rack-cache]
     use Rack::Cache # Make sure this comes first
     use Rack::AssetCompiler, ...
 
-If you're running on Heroku, you get Varnish for free.  So you don't have to worry about this.
+If you're deploying to the Bamboo or Aspen stack on Heroku, you get Varnish for free.  The Cedar stack on
+Heroku does not have Varnish, so you'll have to use Rack::Cache and/or something like [Cloudfront](http://aws.amazon.com/cloudfront/).
 
 If you're running locally, the user agent cache in your browser is sufficient.  So you also don't need to worry about this.
 
