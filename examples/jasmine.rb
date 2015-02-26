@@ -1,11 +1,10 @@
 #
-# spec/javascripts/support/jasmine_config.rb
+# spec/javascripts/support/jasmine.rb
 #
 require 'rack/coffee_compiler'
 
 module Jasmine
-  class Config
-
+  class Configuration
     alias_method :old_js_files, :js_files
 
     def js_files(spec_filter = nil)
@@ -14,14 +13,17 @@ module Jasmine
         filename.sub(/\.coffee/, '.js')
       end
     end
+  end
+end
 
-    def start_server(port=8888)
+module Jasmine
+  class Server
+    def start
       # We can't access the RAILS_ROOT constant from here
       root = File.expand_path(File.join(File.dirname(__FILE__), '../../..'))
 
-      config = self
-
-      app = Rack::Builder.new do
+      config = Jasmine.config
+      @application = Rack::Builder.new do
         # Compiler for your specs
         use Rack::CoffeeCompiler,
             :source_dir => File.join(root, 'spec/javascripts'),
@@ -32,12 +34,12 @@ module Jasmine
             :source_dir => File.join(root, 'public/javascripts'),
             :url => '/public/javascripts'
 
-        run Jasmine.app(config)
+        run Jasmine::Application.app(config)
       end
 
-      server = Rack::Server.new(:Port => port, :AccessLog => [])
+      server = Rack::Server.new(@rack_options.merge(:Port => @port, :AccessLog => []))
       # workaround for Rack bug, when Rack > 1.2.1 is released Rack::Server.start(:app => Jasmine.app(self)) will work
-      server.instance_variable_set(:@app, app)
+      server.instance_variable_set(:@app, @application)
       server.start
     end
   end
