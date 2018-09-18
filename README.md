@@ -80,7 +80,7 @@ options hash. For example...
         :style => :compressed
       }
 
-The above would use the the sass syntax compiler and output compressed
+The above would use the sass syntax compiler and output compressed
 CSS. See [Sass Documentation](http://sass-lang.com/docs/yardoc/file.SASS_REFERENCE.html#options)
 for a list of options.
 
